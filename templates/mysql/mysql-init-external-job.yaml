@@ -1,0 +1,64 @@
+{{- if .Values.outSideMysql.enabled }}
+apiVersion: v1
+data:
+  my.cnf: "[mysqld]\npid-file\t = /var/run/mysqld/mysqld.pid\nsocket\t\t = /var/run/mysqld/mysqld.sock\ndatadir\t\t
+      = /var/lib/mysql\nbind-address = 0.0.0.0"
+kind: ConfigMap
+metadata:
+  name: mysql-cnf
+---
+apiVersion: v1
+data:
+  init.sh: |-
+    #!/bin/bash
+    mysql -h{{ .Values.outSideMysql.Address }} -u{{ .Values.outSideMysql.User }} -p{{ .Values.outSideMysql.Pwd }} < /docker-entrypoint-initdb.d/a-n9e.sql
+    mysql -h{{ .Values.outSideMysql.Address }} -u{{ .Values.outSideMysql.User }} -p{{ .Values.outSideMysql.Pwd }} < /docker-entrypoint-initdb.d/b-ibex.sql
+    mysql -h{{ .Values.outSideMysql.Address }} -u{{ .Values.outSideMysql.User }} -p{{ .Values.outSideMysql.Pwd }} < /docker-entrypoint-initdb.d/c-init.sql
+kind: ConfigMap
+metadata:
+  name: mysql-init-external
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-init-external-job
+spec:
+  selector:
+    matchLabels:
+      app: mysql-init-external-job
+  template:
+    metadata:
+      labels:
+        app: mysql-init-external-job
+    spec:
+      containers:
+        - image: "{{ .Values.insideMysql.image }}"
+          name: mysql
+          command: [ "sh", "/opt/sql/init.sql" ]
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            {{- if .Values.insideMysql.initDb }}
+            - name: mysql-init
+              mountPath: /docker-entrypoint-initdb.d
+            {{- end }}
+            - name: mysql-cnf
+              mountPath: /etc/my.cnf
+              subPath: my.cnf
+            - name: mysql-init-external
+              mountPath: /opt/sql/init.sql
+              subPath: init.sql
+      volumes:
+        {{- if .Values.initMysql.enabled }}
+        - name: mysql-init
+          configMap:
+            name: mysql-init
+        {{- end }}
+        - name: mysql-cnf
+          configMap:
+            name: mysql-cnf
+        - name: mysql-init-external
+          configMap:
+            name: mysql-init-external
+{{- end }}

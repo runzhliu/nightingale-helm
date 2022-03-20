@@ -1,0 +1,92 @@
+{{- if .Values.insideMysql.enabled }}
+apiVersion: v1
+data:
+  my.cnf: "[mysqld]\npid-file\t = /var/run/mysqld/mysqld.pid\nsocket\t\t = /var/run/mysqld/mysqld.sock\ndatadir\t\t
+      = /var/lib/mysql\nbind-address = 0.0.0.0"
+kind: ConfigMap
+metadata:
+  name: mysql-cnf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      initContainers:
+        - name: init-data-path
+          image: "{{ .Values.insideMysql.image }}"
+          imagePullPolicy: IfNotPresent
+          command: [ "sh", "-c", "rm -rf /var/lib/mysql/lost+found" ]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      containers:
+        - image: "{{ .Values.insideMysql.image }}"
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: TZ
+              value: Asia/Shanghai
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            {{- if .Values.initMysql.enabled }}
+            - name: mysql-init
+              mountPath: /docker-entrypoint-initdb.d
+            {{- end }}
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-cnf
+              mountPath: /etc/my.cnf
+              subPath: my.cnf
+      volumes:
+        {{- if .Values.initMysql.enabled }}
+        - name: mysql-init
+          configMap:
+            name: mysql-init
+        {{- end }}
+        - name: mysql-cnf
+          configMap:
+            name: mysql-cnf
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+{{- end }}

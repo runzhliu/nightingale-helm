@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  # 通过helm安装的时候，下面的模板文件的语法会冲突，需要每行加上{{``}}
+  wecom.tpl: |-
+    {{`**级别状态**: {{if .IsRecovered}}<font color="info">{{.SeverityDesc}} 恢复</font>{{else}}<font color="warning">{{.SeverityDesc}} 触发</font>{{end}}`}}
+    {{`**规则标题**: {{.RuleName}}{{if .RuleNote}}`}}
+    {{`**规则备注**: {{.RuleNote}}{{end}}{{if .PromFrom}}`}}
+    {{`**集群**: {{.PromFrom}}{{end}}{{if .Namespace}}`}}
+    {{`**命名空间**: {{.Namespace}}{{end}}`}}
+    {{`**监控指标**: {{.TagsJSON}}`}}
+    {{`{{if .IsRecovered}}**恢复时间**：{{timeformat .LastEvalTime}}{{else}}**触发时间**: {{timeformat .TriggerTime}}`}}
+    {{`**触发时值**: {{.TriggerValue}}{{end}}`}}
+    {{`**发送时间**: {{timestamp}}`}}
+kind: ConfigMap
+metadata:
+  name: n9e-template

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-client
+spec:
+  selector:
+    matchLabels:
+      app: mysql-client
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-client
+    spec:
+      containers:
+        - image: harbor.dev-fql.com/middleware/mysql:5.7.36
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: TZ
+              value: Asia/Shanghai
+          ports:
+            - containerPort: 3306
+              name: mysql
+          command:
+            - "sleep"
+            - "infinity"

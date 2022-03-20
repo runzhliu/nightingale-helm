@@ -1,0 +1,33 @@
+# 外部提供
+notify:
+  proxy: http://10.9.24.190:30581
+  wecomToken:
+
+outSideMysql:
+  enabled: false
+  Address:
+  User: root
+  Pwd: root
+
+outSideRedis:
+  enabled: false
+  Address:
+  User: root
+  Pwd: root
+
+# 自定义
+initMysql:
+  enabled: false
+
+insideMysql:
+  enabled: false
+  initDb: false
+  image: mysql:5.7
+
+insideRedis:
+  enabled: false
+  image: redis:6.2
+
+images:
+  nserver: ulric2019/nightingale:5.4.1
+  nwebapi: ulric2019/nightingale:5.4.1

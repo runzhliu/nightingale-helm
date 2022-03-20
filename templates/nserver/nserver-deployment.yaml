@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nserver
+spec:
+  type: ClusterIP
+  ports:
+    - port: 19000
+      targetPort: 19000
+  selector:
+    app: nserver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nserver
+  labels:
+    app: nserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nserver
+  template:
+    metadata:
+      labels:
+        app: nserver
+    spec:
+      containers:
+        - name: nserver
+          image: {{ .Values.images.nserver }}
+          imagePullPolicy: Always
+          env:
+          - name: TZ
+            value: Asia/Shanghai
+          command:
+            - "/app/n9e"
+            - "server"
+            - "-c"
+            - "/etc/n9e/server.conf"
+          ports:
+            - containerPort: 19000
+          volumeMounts:
+            - name: n9e-config
+              mountPath: /etc/n9e
+            - name: n9e-template
+              mountPath: /etc/template
+            - name: n9e-script
+              mountPath: /etc/script
+      volumes:
+        - name: n9e-config
+          configMap:
+            name: n9e-config
+        - name: n9e-template
+          configMap:
+            name: n9e-template
+        - name: n9e-script
+          configMap:
+            defaultMode: 0777
+            name: n9e-script
