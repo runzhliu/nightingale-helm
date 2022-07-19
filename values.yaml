@@ -3,6 +3,9 @@ notify:
   proxy: http://10.9.24.190:30581
   wecomToken:
 
+prometheus:
+  url: http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc.cluster.local:9090
+
 outSideMysql:
   enabled: false
   Address:
