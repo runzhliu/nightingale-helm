@@ -354,7 +354,7 @@ data:
     # Prometheus cluster name
     Name = "Prometheus"
     # Prometheus APIs base url
-    Prom = "http://prometheus-operated.cattle-monitoring-system.svc.cluster.local:9090"
+    Prom = "{{ .Values.prometheus.url }}"
     # Basic auth username
     BasicAuthUser = ""
     # Basic auth password
