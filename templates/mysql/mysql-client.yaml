@@ -14,7 +14,7 @@ spec:
         app: mysql-client
     spec:
       containers:
-        - image: harbor.dev-fql.com/middleware/mysql:5.7.36
+        - image: "{{ .Values.insideMysql.clientImage }}"
           name: mysql
           env:
             - name: MYSQL_ROOT_PASSWORD

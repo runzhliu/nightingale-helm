@@ -137,7 +137,7 @@ data:
 
     [Reader]
     # prometheus base url
-    Url = "http://prometheus-operated.cattle-monitoring-system.svc.cluster.local:9090"
+    Url = "http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc.cluster.local:9090"
     # Basic auth username
     BasicAuthUser = ""
     # Basic auth password
@@ -163,7 +163,7 @@ data:
     SleepInterval = 50
 
     [[Writers]]
-    Url = "http://prometheus-operated.cattle-monitoring-system.svc.cluster.local:9090/api/v1/write"
+    Url = "http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc.cluster.local:9090/api/v1/write"
     # Basic auth username
     BasicAuthUser = ""
     # Basic auth password

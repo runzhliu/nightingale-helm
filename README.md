@@ -40,3 +40,6 @@ helm install nightingale \
 ./nightingale
 ```
 
+## n9e如何访问prometheus
+
+这里的配置主要查看 [n9e-config](templates/nserver/n9e-config.yaml) 中 `Reader` 模块中的地址，需要改成与你环境匹配的 url

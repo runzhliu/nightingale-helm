@@ -23,6 +23,7 @@ insideMysql:
   enabled: false
   initDb: false
   image: mysql:5.7
+  clientImage: mysql:5.7
 
 insideRedis:
   enabled: false
