@@ -33,5 +33,5 @@ insideRedis:
   image: redis:6.2
 
 images:
-  nserver: ulric2019/nightingale:5.4.1
-  nwebapi: ulric2019/nightingale:5.4.1
+  nserver: runzhliu/n9e-slim:5.4.1
+  nwebapi: runzhliu/n9e-slim:5.4.1

@@ -15,8 +15,8 @@ helm install nightingale \
 --namespace n9e --create-namespace \
 --set redis.enabled=true \
 --set mysql.initDb=true \
---set images.nserver=ulric2019/nightingale:5.4.1 \
---set images.nwebapi=ulric2019/nightingale:5.4.1 \
+--set images.nserver=runzhliu/n9e-slim:5.4.1 \
+--set images.nwebapi=runzhliu/n9e-slim:5.4.1 \
 --set insideMysql.image=mysql:5.7 \
 --set insideRedis.image=redis:6.2 \
 --set insideMysql.enabled=true \
@@ -35,8 +35,8 @@ helm install nightingale \
 --set outSideMysql.Pwd=root \
 --set initMysql.enabled=true \
 --set outSideRedis.Address=redis:6379 \
---set images.nserver=ulric2019/nightingale:5.4.1 \
---set images.nwebapi=ulric2019/nightingale:5.4.1 \
+--set images.nserver=runzhliu/n9e-slim:5.4.1 \
+--set images.nwebapi=runzhliu/n9e-slim:5.4.1 \
 ./nightingale
 ```
 
