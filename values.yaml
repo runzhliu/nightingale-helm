@@ -20,16 +20,16 @@ outSideRedis:
 
 # 自定义
 initMysql:
-  enabled: false
+  enabled: true
 
 insideMysql:
-  enabled: false
-  initDb: false
+  enabled: true
+  initDb: true
   image: mysql:5.7
   clientImage: mysql:5.7
 
 insideRedis:
-  enabled: false
+  enabled: true
   image: redis:6.2
 
 images:
