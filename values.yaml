@@ -35,3 +35,8 @@ insideRedis:
 images:
   nserver: runzhliu/n9e-slim:5.4.1
   nwebapi: runzhliu/n9e-slim:5.4.1
+
+service:
+  ui:
+    type: ClusterIP
+    nodePort: null
