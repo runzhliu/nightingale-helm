@@ -35,3 +35,8 @@ insideRedis:
 images:
   nserver: ulric2019/nightingale:5.4.1
   nwebapi: ulric2019/nightingale:5.4.1
+
+service:
+  ui:
+    type: ClusterIP
+    nodePort: null

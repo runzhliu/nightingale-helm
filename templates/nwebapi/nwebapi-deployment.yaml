@@ -3,10 +3,15 @@ kind: Service
 metadata:
   name: nwebapi
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.ui.type }}
   ports:
     - port: 18000
       targetPort: 18000
+      {{- if .Values.service.ui.nodePort }}
+      nodePort: {{ .Values.service.ui.nodePort }}
+      {{- else }}
+      nodePort: null
+      {{- end }}
   selector:
     app: nwebapi
 ---
